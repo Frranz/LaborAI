@@ -26,9 +26,31 @@ int main(int argc, char *argv[]) {
 	}
 	
 	linListPrint(l_field);
-	linListPrintReverse(l_field);
+
+	linListRevert(&l_field);
+//	linListPrint(l_field);
+//	linListRevert(&l_field);
+//*/
+//	linListPrintReverse(l_field);
+	deleteDublicatesNaive(&l_field);
+	linListPrint(l_field);
 	
-	deleteDublicates(&l_field);
+	linList_p findMe = linListFind(l_field,"b");
+	printf("find me got element with text: %s\n",findMe->text);
+	
+	linList_p findMe2 = linListFind(l_field,"c");
+//	linListSwap(&l_field,findMe,findMe2);
+	linListPrint(l_field);
+	
+	linList_p extracted = linListExtract(&l_field,findMe);
+	printf("content of extracted cell: %s\n",extracted->text);
+	printf("Adresse von findMe: %10x und von extracted %10x\n",findMe,extracted);
+	
+	linListPrint(l_field);
+	
+	linListFree(&l_field);
+	linListPrint(l_field);
+	
 /*	linList_p newPoin = linListAllocCell("abcdefg");	
 	linList_p newPoin2 = linListAllocCell("hc");	
 		
@@ -55,11 +77,12 @@ void linListFreeCell(linList_p junk){   //noch nicht fertig. schauen ob die cell
 }
 
 void linListFree(linListField* f){
-	f->momentan = f->start;
-	while(f->momentan!=0){
-		f->momentan = f->start->next;
+	linList_p buffer;
+	buffer = f->start;
+	while(buffer!=0){
+		buffer = f->start->next;
 		linListFreeCell(f->start);
-		f->start = f->momentan;
+		f->start = buffer;
 	}
 	printf("everything has been deleted my friend\n");
 }
@@ -70,19 +93,20 @@ void linListInsertFirst(linListField* f, linList_p newFirstCell){   //nicht sich
 	printf("%s als erstes Element eingefügt\n",f->start->text);
 }
 
-void linListInsertLast(linListField* f, linList_p newLastCell){   //nicht sicher, warum das einen rückgabewert braucht4
+void linListInsertLast(linListField* f, linList_p newLastCell){   //nicht sicher, warum das einen rückgabewert braucht4+
+	linList_p buffer;
 	if(f->start==0){
 		f->start = newLastCell;
-		f->momentan = f->start;
+		buffer = f->start;
 	}else{
-		f->momentan = f->start;
-		while(f->momentan->next){
-			f->momentan = f->momentan->next;
+		buffer = f->start;
+		while(buffer->next){
+			buffer = buffer->next;
 		}
-		f->momentan->next = newLastCell;
-		f->momentan = f->momentan->next;
+		buffer->next = newLastCell;
+		buffer = buffer->next;
 	}
-	printf("%s als letztes Element eingefügt\n",f->momentan->text);
+	printf("%s als letztes Element eingefügt\n",buffer->text);
 }
 
 linList_p linListExtractFirst(linListField* f){
@@ -90,12 +114,13 @@ linList_p linListExtractFirst(linListField* f){
 }
 
 void linListPrint(linListField f){
+	linList_p buffer;
 	printf("=======================================\n");
 	printf(">list from first to last\n");
-	f.momentan = f.start;
-	while(f.momentan){
-		printf("%s\n",f.momentan->text);
-		f.momentan=f.momentan->next;
+	buffer = f.start;
+	while(buffer){
+		printf("%s\n",buffer->text);
+		buffer=buffer->next;
 	}
 }
 
@@ -121,18 +146,134 @@ void linListPrintReverse(linListField f){
 	}
 }
 
-void deleteDublicates(linListField* f){
-	f->momentan = f->start;
+void deleteDublicatesNaive(linListField* f){
+	printf("========================================\n");
+	printf(">deleting duplicates\n");
+	linList_p firstOccurance;
+	linList_p runner;
+	linList_p deleteBuffer;
+	firstOccurance = f->start;
 	
-	while(f->momentan){
-		f->zwischen = f->start;
-		while(f->zwischen){
-			if(strcmp(f->zwischen->text,f->momentan->text)==0){
-				
-			}		
+	while(firstOccurance){
+		runner = firstOccurance;
+		while(runner->next){
+			if(strcmp(runner->next->text,firstOccurance->text)==0){
+				deleteBuffer = runner->next;
+				runner->next = runner->next->next;
+				linListFreeCell(deleteBuffer);
+			}else{
+				runner = runner->next;	
+			}
 		}
+		firstOccurance = firstOccurance->next;
+		
+	}
+}
+
+linList_p linListFind(linListField f,char* payload){
+	linList_p runner;
+	runner = f.start;
+	while(runner){
+		if(strcmp(runner->text,payload)==0){
+			return runner;
+		}
+		runner = runner->next;
+	}
+}
+
+linList_p linListExtract(linListField *f, linList_p cell){
+	linList_p runner;
+	runner = f->start;
+	
+	if(f->start == cell){
+		f->start == cell->next;
+		return cell;
 	}
 	
-//	f->momentan = f->start;
-//	while(f->momentan)
+	while(runner->next){
+		if(runner->next == cell){
+			runner->next = runner->next->next;
+			return cell;
+		}
+		runner = runner->next;
+	}
+	
+	return 0;
+}
+
+void linListRevert(linListField *f){
+	/*printf("list reverted\n");
+	linList_p runner;
+	linList_p startFront;
+	linList_p startBack;
+	linList_p saveLast;
+	runner = f->start;
+	while(runner->next){
+		runner = runner->next;
+	}
+	
+	startFront = f->start;
+	while(startFront!=startBack && startFront->next != startBack){
+		startBack = startFront;
+		while(startBack->next != runner){
+			
+		}
+	}*/
+	
+	linList_p runner;
+	linList_p saveLast;
+	linList_p swapBuffer;
+	runner = f->start;
+	while(runner->next){
+		runner = runner->next;
+	}
+	saveLast = runner;
+	
+	runner = f->start;
+	while(f->start!=saveLast){
+		swapBuffer = saveLast->next;
+		saveLast->next = f->start;
+		f->start = f->start->next;
+		saveLast->next->next = swapBuffer;
+	}
+}
+
+void linListSwap(linListField* f,linList_p cell1, linList_p cell2){
+	printf("swapping %s and %s\n",cell1->text,cell2->text);
+	linList_p before1;
+	linList_p before2;
+	linList_p buffer;
+	
+	before1 = f->start;
+	before2 = f->start;
+	
+	while(before1->next != cell1 && before1->next != 0){
+		before1 = before1->next;
+	}
+	
+	while(before2->next != cell2 && before2->next != 0){
+		before2 = before2->next;
+	}
+	
+	if(f->start == cell1){
+		f->start = cell2;
+		buffer= cell1->next;
+		cell1->next = cell2->next;
+		cell2->next = buffer;
+		before2->next = cell1;
+	}else if(f->start == cell2){
+		f->start = cell1;
+		buffer= cell2->next;
+		cell2->next = cell1->next;
+		cell1->next = buffer;
+		before1->next = cell2;
+	}else{
+		before1->next = cell2;
+		before2->next = cell1;
+		
+		buffer = cell2->next;
+		cell2->next = cell1->next;
+		cell1->next = buffer;
+	}
+	
 }
