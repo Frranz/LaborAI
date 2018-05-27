@@ -28,8 +28,9 @@ int main(int argc, char *argv[]) {
 	linListPrint(l_field);
 	linListPrintReverse(l_field);
 	
+	deleteDublicates(&l_field);
 /*	linList_p newPoin = linListAllocCell("abcdefg");	
-	linList_p newPoin2 = linListAllocCell("petrusmeinsohn");	
+	linList_p newPoin2 = linListAllocCell("hc");	
 		
 	
 	linListInsertFirst(&l_field,newPoin);
@@ -118,6 +119,20 @@ void linListPrintReverse(linListField f){
 		elemBuffer = f.momentan;
 		f.momentan=f.start;
 	}
+}
+
+void deleteDublicates(linListField* f){
+	f->momentan = f->start;
 	
+	while(f->momentan){
+		f->zwischen = f->start;
+		while(f->zwischen){
+			if(strcmp(f->zwischen->text,f->momentan->text)==0){
+				
+			}		
+		}
+	}
 	
+//	f->momentan = f->start;
+//	while(f->momentan)
 }
