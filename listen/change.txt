@@ -1,1 +1,6 @@
-linlistsawp doesnt work but also is not necessary
+eigene hashmap erstellen: array aus array von strukturen(int counter;char[] payload)
+
+erster array linked auf zweiten. 
+
+für neuen key: hashwert berechnen modulo gesamtelemente länge,dann zum zweiten array zeiger zu struktur hinzufügen wo name und counter drinstehen
+funktion zum auslesen erstellen: hashwert von key % länge 1. array berechnen, dann durch zweiten array loopen und von den strukturen namen vergleichen
