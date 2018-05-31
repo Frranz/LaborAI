@@ -3,6 +3,7 @@
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 int main(int argc, char *argv[]) {
+	hashStruct* hashMap;
 	linListField l_field;
 	l_field.start = 0;
 	l_field.momentan = 0;
@@ -26,13 +27,21 @@ int main(int argc, char *argv[]) {
 	}
 	
 	linListPrint(l_field);
+	
+	hashMap = (hashStruct_p)malloc(sizeof(hashStruct_p)*amount);
+	emptyArray(hashMap,amount);
+	createHashTableFromLinList(l_field,hashMap,linListGetLength(l_field));
+	hashStruct_p test = getStructFromHashTable(hashMap,"getpetrus",amount);
+	printCounters(hashMap,amount);
 
-	linListRevert(&l_field);
+	
+
+
 //	linListPrint(l_field);
 //	linListRevert(&l_field);
 //*/
 //	linListPrintReverse(l_field);
-	deleteDublicatesNaive(&l_field);
+/*	deleteDublicatesNaive(&l_field);
 	linListPrint(l_field);
 	
 	linList_p findMe = linListFind(l_field,"b");
@@ -49,7 +58,7 @@ int main(int argc, char *argv[]) {
 	linListPrint(l_field);
 	
 	linListFree(&l_field);
-	linListPrint(l_field);
+	linListPrint(l_field);*/
 	
 /*	linList_p newPoin = linListAllocCell("abcdefg");	
 	linList_p newPoin2 = linListAllocCell("hc");	
@@ -276,4 +285,108 @@ void linListSwap(linListField* f,linList_p cell1, linList_p cell2){
 		cell1->next = buffer;
 	}
 	
+}
+
+int createHashFromString(char text[], int maxSize){
+	int sum = 0;
+	int counter = 0;
+	while(text[counter]){
+		sum += (int) text[counter];
+		counter ++;
+	}
+	
+	return sum % maxSize;
+}
+
+int linListGetLength(linListField f){
+	int lCounter = 0; //length counter
+	linList_p runner;
+	
+	runner = f.start;
+	
+	while(runner){
+		lCounter++;
+		runner = runner->next;
+	}
+	return lCounter;
+}
+
+void emptyArray(hashStruct* arr[],int arrLen){
+	arrLen -=1;
+	while(arrLen>-1){
+		arr[arrLen] = 0;
+		arrLen--;
+	}
+}
+
+void createHashTableFromLinList(linListField f, hashStruct* arr[], int arrLen){
+	int hashVal;
+	linList_p outerRunner;
+	hashStruct_p innerRunner;
+	hashStruct* hashStrucCell;
+	char* cellText;
+	signed char textFound;
+	outerRunner = f.start;
+	while(outerRunner){
+		hashVal = createHashFromString(outerRunner->text,arrLen);
+		innerRunner = arr[hashVal];
+		textFound = 0;
+		while(innerRunner && !textFound){
+			if(strcmp(innerRunner->text,outerRunner->text)==0){
+				textFound = 1;
+				innerRunner->counter += 1;
+			}
+			if(innerRunner->next==0){
+				break;
+			}else {
+				innerRunner = innerRunner->next;	
+			}
+					
+		}
+		if(!textFound){
+			hashStrucCell = malloc(sizeof(hashStruct));
+//			cellText = (char*) malloc(STRINGLENGTH);
+			if(innerRunner == 0){
+				arr[hashVal] = hashStrucCell;
+				innerRunner = arr[hashVal];
+			}else{
+				innerRunner->next = hashStrucCell;
+				innerRunner = innerRunner->next;
+			}
+//			innerRunner->text = cellText;
+			strcpy(innerRunner->text,outerRunner->text);
+			innerRunner->next = 0;
+			innerRunner->counter = 1;
+		}
+		
+		
+		outerRunner = outerRunner->next;
+	}
+}
+
+hashStruct_p getStructFromHashTable(hashStruct* arr[],char* payload,int arrSize){
+	hashStruct_p runner;
+	int hashVal = createHashFromString(payload,arrSize);
+	runner = arr[hashVal];
+	while(runner){
+		if(strcmp(runner->text,payload)==0){
+			return runner;
+		}
+		runner = runner->next;
+	}
+	return 0;
+}
+
+void printCounters(hashStruct* arr[],int arrSize){
+	hashStruct_p runner;
+	arrSize--;
+	while(arrSize>-1){
+		runner = arr[arrSize];
+		while(runner){
+			printf("payload %s appeared %d times\n",runner->text,runner->counter);
+			runner = runner->next;
+		}
+		
+		arrSize--;
+	}
 }
