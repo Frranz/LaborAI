@@ -14,6 +14,15 @@ typedef struct labyrinth
    int maxrow;
    int startx;
    int starty;
-   int treasurex;
-   int treasurey;
+   int endx;
+   int endy;
 }LabCell, *Lab_p;
+
+
+void printLab(LabCell lab);
+void solveLab(Lab_p lab);
+void myNaive(Lab_p lab);
+void moveRight(int* row,int* col);
+void moveLeft(int* row,int* col);
+void moveDown(int* row,int* col);
+void moveUp(int* row,int* col);
