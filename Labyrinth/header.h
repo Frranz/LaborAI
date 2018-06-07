@@ -19,10 +19,13 @@ typedef struct labyrinth
 }LabCell, *Lab_p;
 
 
-void printLab(LabCell lab);
 void solveLab(Lab_p lab);
 void myNaive(Lab_p lab);
+void printLab(char lab[][MAXROWS],int maxRow);
 void moveRight(int* row,int* col);
 void moveLeft(int* row,int* col);
 void moveDown(int* row,int* col);
 void moveUp(int* row,int* col);
+int twoOrMoreAround(char lab[][MAXROWS],int row,int col, char findTwoOfMe);
+int canBlock(char lab[][MAXROWS],int row,int col);
+
