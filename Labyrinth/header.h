@@ -5,8 +5,7 @@
 #define MAXCOLS  256
 #define MAXROWS  256
 
-typedef struct labyrinth
-{
+typedef struct labyrinth{
    char lab[MAXCOLS+2][MAXROWS];
    long costs[MAXCOLS][MAXROWS];
    long bestx[MAXCOLS][MAXROWS];
@@ -21,6 +20,10 @@ typedef struct labyrinth
 
 void solveLab(Lab_p lab);
 void myNaive(Lab_p lab);
+void myNaive2(Lab_p lab);
+void turnRight(int dir[]);
+void turnLeft(int dir[]);
+char checkRight(char lab[][MAXROWS],int row,int col,int dirX,int dirY);
 void printLab(char lab[][MAXROWS],int maxRow);
 void moveRight(int* row,int* col);
 void moveLeft(int* row,int* col);
