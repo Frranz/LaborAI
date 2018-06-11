@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]) {
 	LabCell lab;
 	char stdFileName[35+1];
-	strcpy(stdFileName,"labhuge1.txt");
+	strcpy(stdFileName,"testlab.txt");
 	
 	int colCount;
 	int rowCount = 0;
@@ -51,7 +51,6 @@ int main(int argc, char *argv[]) {
 	printf("nach print - addr=%p\n",&lab);
 	myNaive2(&lab);
 	printf("nach naive\n");
-	getch();
 	return 0;
 }
 
@@ -61,6 +60,7 @@ void solveLab(Lab_p lab){
 }
 
 void myNaive2(Lab_p lab){
+	char save;
 	int steps = 0;
 	int loopRuns = 0;
 	int turns = 0;
@@ -82,11 +82,16 @@ void myNaive2(Lab_p lab){
 		}else{
 			turnLeft(&dir);
 		}
+		save = lab->lab[row][col];
+		lab->lab[row][col] = 'O';
+		system("@cls||clear");
 		printLab(lab->lab,lab->maxrow);
+		lab->lab[row][col] = save;
 		printf("row: %d, col: %d\n",row,col);
 		printf("direction: [%d,%d]\n",dir[0],dir[1]);
 		printf("end of loop\n");
 		loopRuns++;
+		Sleep(100);
 	}
 	printf("steps: %d\n",steps);
 	printf("loopRuns: %d\n",loopRuns);
