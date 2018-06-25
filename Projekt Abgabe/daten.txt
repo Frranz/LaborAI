@@ -1,0 +1,3 @@
+ 40472 Pferd                       987 Euro       3000      
+ 40521 Nagel                         9 Euro       30        
+ 38302 Geodreieck                   47 Euro       3         

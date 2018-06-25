@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 	printf("size: %d",size);	
 	num = initArrayFromFile(fileName);
 	printArray(num,size);
-	insertSort(num,size);
+	mergeSort(num,size);
 	getch();
 	return 0;
 }
@@ -82,4 +82,23 @@ void insertSort(int* num,int size){
 	
 	printArray(num,size);
 	printf("durchlaufe innere schleife: %d\n",innerLoopCount);
+}
+
+void mergeSort(int *num, int size){
+	int i = 0;
+	int j = 0;
+	int cSize = 0;
+	int* playNum = malloc(sizeof(int)*size);
+	
+	while(i<size){
+		playNum[i] = num[i];
+		i++;
+	}
+	
+	i=0;
+	while(i<size){
+		
+	}
+	
+	
 }
